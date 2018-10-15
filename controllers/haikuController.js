@@ -11,7 +11,7 @@ module.exports = {
      * haikuController.list()
      */
     list: function (req, res) {
-        haikuModel.find(function (err, haikus) {
+        haikuModel.paginate({}, { page: req.query.page || 1 }, function (err, haikus) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting haiku.',

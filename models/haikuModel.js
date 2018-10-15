@@ -8,4 +8,6 @@ var haikuSchema = new Schema({
 	'author' : String
 });
 
+haikuSchema.plugin(require('mongoose-paginate'));
+
 module.exports = mongoose.model('haiku', haikuSchema);
