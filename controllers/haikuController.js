@@ -1,4 +1,5 @@
 var haikuModel = require('../models/haikuModel.js');
+var hal = require('hal');
 
 /**
  * haikuController.js
@@ -18,7 +19,44 @@ module.exports = {
                     error: err
                 });
             }
-            return res.json(haikus);
+
+            // store some vars about the state of request
+            var resourceLink = '/haiku',
+                firstPage = 1,
+                currentPage = Number(haikus.page),
+                currentLink = req.query.page ? `${resourceLink}?page=${currentPage}` : resourceLink,
+                prevPage = currentPage-1,
+                nextPage = currentPage+1,
+                lastPage = Number(haikus.pages);
+
+            // generate an new docs array of `hal` resources with their own links.
+            var docs = haikus.docs.map(function(haiku) {
+                return new hal.Resource(haiku._doc, `${resourceLink}/${haiku._id}`);
+            });
+
+            // deleting the docs array from the original paginated result, so we can embed them with HAL.
+            delete haikus.docs; 
+
+            // create a `hal` resource of our paginated collection
+            // use the `currentLink` variable so it displays page number if it's set
+            var collection = new hal.Resource(haikus, currentLink);
+
+            // embed the new docs array.
+            collection.embed("haikus", docs);
+
+            // add in our first, prev, next, last pagination links
+            collection.link("first", `${resourceLink}?page=${firstPage}`);
+            if (currentPage > firstPage) {
+                collection.link("prev", `${resourceLink}?page=${prevPage}`);
+            }
+            if (currentPage < lastPage) {
+                collection.link("next", `${resourceLink}?page=${nextPage}`);
+            }
+            collection.link("last", `${resourceLink}?page=${lastPage}`);
+
+            collection.link("create", {href: `${resourceLink}`, method: "POST"});
+
+            return res.json(collection);
         });
     },
 
@@ -39,7 +77,14 @@ module.exports = {
                     message: 'No such haiku'
                 });
             }
-            return res.json(haiku);
+
+            var resourceLink = `/haiku/${haiku._id}`,
+                resource = new hal.Resource(haiku._doc, resourceLink);
+
+            resource.link("update", {href: `${resourceLink}`, method: "PUT"});
+            resource.link("delete", {href: `${resourceLink}`, method: "DELETE"});
+
+            return res.json(resource);
         });
     },
 
@@ -62,7 +107,9 @@ module.exports = {
                     error: err
                 });
             }
-            return res.status(201).json(haiku);
+
+            var resource = new hal.Resource(haiku._doc, `/haiku/${haiku._id}`);
+            return res.status(201).json(resource);
         });
     },
 
@@ -97,7 +144,8 @@ module.exports = {
                     });
                 }
 
-                return res.json(haiku);
+                var resource = new hal.Resource(haiku._doc, `/haiku/${haiku._id}`);
+                return res.json(resource);
             });
         });
     },
