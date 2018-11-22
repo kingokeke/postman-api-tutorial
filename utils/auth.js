@@ -1,3 +1,4 @@
+// utils/auth.js
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
 const request = require('request');
@@ -16,7 +17,7 @@ module.exports = {
     algorithms: ['RS256']
   }),
 
-  profile: function (req, res, callback) {
+  profile: (req, res, callback) => {
     var options = {
       url: `https://${process.env.AUTH0_DOMAIN}/userinfo`,
       headers: {

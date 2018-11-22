@@ -1,11 +1,11 @@
 // app.js
-var express = require('express');
-var logger = require('morgan');
-var err = require('./utils/err');
+const express = require('express');
+const logger = require('morgan');
+const err = require('./utils/err');
 
-var indexRouter = require('./routes/index');
+const indexRouter = require('./routes/index');
 
-var app = express();
+const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());

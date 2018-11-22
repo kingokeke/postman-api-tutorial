@@ -1,10 +1,10 @@
 // routes/index.js
-var express = require('express');
-var hal = require('hal');
-var router = express.Router();
+const express = require('express');
+const hal = require('hal');
+const router = express.Router();
 
 /* GET root */
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
   res.json(new hal.Resource({}, '/'));
 });
 

@@ -1,7 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var haikuController = require('../controllers/haikuController.js');
-var auth = require('../utils/auth');
+// routes/haikuRoutes.js
+const express = require('express');
+const router = express.Router();
+const haikuController = require('../controllers/haikuController.js');
+const auth = require('../utils/auth');
 
 /*
  * GET

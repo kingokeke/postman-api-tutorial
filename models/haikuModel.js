@@ -1,7 +1,8 @@
-var mongoose = require('mongoose');
-var Schema   = mongoose.Schema;
+// models/haikuModel.js
+const mongoose = require('mongoose');
+const Schema   = mongoose.Schema;
 
-var haikuSchema = new Schema({
+const haikuSchema = new Schema({
 	'line1' : String,
 	'line2' : String,
 	'line3' : String,
